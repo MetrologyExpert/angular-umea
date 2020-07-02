@@ -1,0 +1,70 @@
+
+<form>
+    <div class="form-group">
+        <label for="uncertainty">Title</label>
+        <input #title="ngModel" [(ngModel)]="uncertainty.title" ngModel name="uncertainty" id="uncertainty" type="text" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="uncertainty">Value</label>
+        <input #value="ngModel" [(ngModel)]="uncertainty.value" ngModel name="uncertainty" id="uncertainty" type="text" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="uncertainty">PDF</label>
+        <input #pdf="ngModel" [(ngModel)]="uncertainty.pdf" ngModel name="uncertainty"t id="uncertainy" type="text" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="uncertainty">SC</label>
+        <input #sc="ngModel" [(ngModel)]="uncertainty.sc" ngModel name="uncertainty" id="uncertainty" type="text" class="form-control" required>
+    </div>
+
+    <button (click)= "addUncertainty(uncertainty)" class="btn btn-primary">Save</button>
+    <button (click)= "addIdNumber()" class="btn btn-primary">Date</button>
+    <!-- <button (click)= "getUncertaintyId()" class="btn btn-primary">getId</button> -->
+</form>
+<p></p>
+
+ 
+<div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown"  ng-controller="testController">
+    <button class="btn btn-outline-primary mr-2" id="dropdownManual" ngbDropdownAnchor (focus)="myDrop.open()">Table Number</button>
+    <div ngbDropdownMenu aria-labelledby="dropdownManual">
+      <button ngbDropdownItem *ngFor="let f of uncertainty$ | async" (click)="selected(f.tableNumber)"> {{f.tableNumber}}</button>
+     </div>
+  </div> 
+
+  <!-- <div class="form-group">
+    <label for="category">Category</label>
+    <select #tableNumber="ngModel" [(ngModel)]="product.category" name="category" id="category" class="form-control" required>
+      <option></option>
+      <option *ngFor="let c of categories$ | async" [value]="c.$key">
+        {{c.name}}
+      </option>
+    </select>
+    <div class="alert alert-danger" *ngIf="category.touched && category.invalid">
+      Category is requried.
+    </div>
+  </div> -->
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Table Number</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let u of uncertainty$ | async">
+        <tr   *ngIf= "u.tableNumber == selectedNumber ">
+            <td >{{ u.tableNumber }}</td>
+            <td>{{ u.dateCreated }}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+

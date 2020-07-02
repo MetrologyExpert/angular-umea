@@ -1,0 +1,20 @@
+<p>
+    <button class="btn btn-primary" routerLink="/admin/instrument-page/new">New Instrument</button>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Instrument</th>
+            <th>Price</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let i of instruments$ | async">
+            <td>{{ i.title }}</td>
+            <td>{{ i.price }}</td>
+            <td> <a [routerLink]="['/admin/instrument-page/', i.key]" >Edit </a></td>
+        </tr>
+    </tbody>
+</table>
