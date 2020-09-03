@@ -15,13 +15,15 @@ instruments$: Observable<any>;
   constructor(
     private instrumentService:InstrumentService
   ) {
-    this.instruments$ = this.instrumentService.getAll().snapshotChanges().pipe(
+    this.instruments$ = this.instrumentService.getAll()
+    .snapshotChanges()
+    .pipe(
       map(changes => 
-        changes.map(c => ({ key: c.payload.key, ...c.payload.exportVal()}))
+      changes.map(c => ({ key: c.payload.key, ...c.payload.child("instrument_details").exportVal()}))
       )
     );
    }
 
-
+   
 
 }

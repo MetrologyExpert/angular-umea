@@ -1,70 +1,67 @@
+ <div class="row">
+    <div class="col-md-6">
+      <form #f="ngForm" (ngSubmit)="save(f.value)">
 
-<form>
-    <div class="form-group">
-        <label for="uncertainty">Title</label>
-        <input #title="ngModel" [(ngModel)]="uncertainty.title" ngModel name="uncertainty" id="uncertainty" type="text" class="form-control" required>
-    </div>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input #title="ngModel" [(ngModel)]="instrument.title" name="title" id="title" type="text" class="form-control" required>
+            <div class="alert alert-danger" *ngIf="title.touched && title.invalid">Title is required </div>
+        </div>
 
-    <div class="form-group">
-        <label for="uncertainty">Value</label>
-        <input #value="ngModel" [(ngModel)]="uncertainty.value" ngModel name="uncertainty" id="uncertainty" type="text" class="form-control" required>
-    </div>
+        <div class="form-group">
+            <label for="manufacturer">Manufacturer</label>
+            <input #manufacturer="ngModel" [(ngModel)]="instrument.manufacturer" name="manufacturer" id="manufacturer" type="text" class="form-control" required>
+            <div class="alert alert-danger" *ngIf="manufacturer.touched && manufacturer.invalid">Manufacturer is required</div>
 
-    <div class="form-group">
-        <label for="uncertainty">PDF</label>
-        <input #pdf="ngModel" [(ngModel)]="uncertainty.pdf" ngModel name="uncertainty"t id="uncertainy" type="text" class="form-control" required>
-    </div>
+        </div>
 
-    <div class="form-group">
-        <label for="uncertainty">SC</label>
-        <input #sc="ngModel" [(ngModel)]="uncertainty.sc" ngModel name="uncertainty" id="uncertainty" type="text" class="form-control" required>
-    </div>
+        <div class="form-group">
+            <label for="model">Model</label>
+            <input #model="ngModel" [(ngModel)]="instrument.model" name="model" id="model" type="text" class="form-control" required>
+            <div class="alert alert-danger" *ngIf="model.touched && model.invalid">Model is required</div>
 
-    <button (click)= "addUncertainty(uncertainty)" class="btn btn-primary">Save</button>
-    <button (click)= "addIdNumber()" class="btn btn-primary">Date</button>
-    <!-- <button (click)= "getUncertaintyId()" class="btn btn-primary">getId</button> -->
-</form>
-<p></p>
+        </div>
+        
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select #category="ngModel" [(ngModel)]="instrument.category" name="category" id="category"   type="text" class="form-control" required>
+                <option value=""></option>
+                <option *ngFor="let c of categories$ | async" [value] = "c.key" > {{ c.payload.val().name }}</option>
+            </select>
+            <div class="alert alert-danger" *ngIf="model.touched && model.invalid">Category is required</div>
 
+        </div>
+
+        <div class="form-group">
+            <label for="price" >Price</label>
+            <div class="input-group-prepend">
+                <span class="input-group-text">£</span>
+                <input #price="ngModel" [(ngModel)]="instrument.price" name="price" id="price" type="number" class="form-control" required>
+                <div class="alert alert-danger" *ngIf="price.touched && price.invalid">Price is required</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="imageUrl">Image URL</label>
+            <div class="input-group-prepend">
+            <input #imageUrl="ngModel" [(ngModel)]="instrument.imageUrl" name="imageUrl" id="imageUrl" type="text" class="form-control" required>
+            <div class="alert alert-danger" *ngIf="imageUrl.touched && imageUrl.invalid">Image is required</div>
+            </div>
+        </div>
+
+            <button class="btn btn-primary">Save</button>
+            <button (click) = "delete()" class="btn btn-danger">Delete</button>
+        </form> 
  
-<div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown"  ng-controller="testController">
-    <button class="btn btn-outline-primary mr-2" id="dropdownManual" ngbDropdownAnchor (focus)="myDrop.open()">Table Number</button>
-    <div ngbDropdownMenu aria-labelledby="dropdownManual">
-      <button ngbDropdownItem *ngFor="let f of uncertainty$ | async" (click)="selected(f.tableNumber)"> {{f.tableNumber}}</button>
-     </div>
-  </div> 
-
-  <!-- <div class="form-group">
-    <label for="category">Category</label>
-    <select #tableNumber="ngModel" [(ngModel)]="product.category" name="category" id="category" class="form-control" required>
-      <option></option>
-      <option *ngFor="let c of categories$ | async" [value]="c.$key">
-        {{c.name}}
-      </option>
-    </select>
-    <div class="alert alert-danger" *ngIf="category.touched && category.invalid">
-      Category is requried.
     </div>
-  </div> -->
-
-
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Table Number</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody *ngFor="let u of uncertainty$ | async">
-        <tr   *ngIf= "u.tableNumber == selectedNumber ">
-            <td >{{ u.tableNumber }}</td>
-            <td>{{ u.dateCreated }}</td>
-        </tr>
-    </tbody>
-</table>
-
-
-
+  <div class="col-md-6">
+    <div class="card" style="width: 18rem;">
+        <img [src]="instrument.imageUrl" class="card-img-top" *ngIf="instrument.imageUrl" >
+        <div class="card-body">
+          <h5 class="card-title">{{instrument.title}}</h5>
+          <p class="card-text">{{instrument.price | currency:"USD":"symbol"}}</p>
+        </div>
+      </div>
+</div>
 
 

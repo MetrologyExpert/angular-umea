@@ -8,7 +8,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireModule } from '@angular/fire';
 //
-import { FormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 //
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,6 +42,7 @@ import { UncertaintyService } from './uncertainty.service';
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
@@ -55,8 +56,11 @@ import { UncertaintyService } from './uncertainty.service';
       {path:'admin/instrument-page/new',
        component:InstrumentPageComponent},
 
-      {path:'admin/instrument-page/:id', 
-      component:InstrumentPageComponent},
+       {path:'admin/instrument-page/:id', 
+       component:InstrumentPageComponent},
+
+      {path:'admin/uncertainty-page/:id', 
+      component:UncertaintyPageComponent},
 
       {path:'admin/instruments-list', 
       component:InstrumentsListComponent},

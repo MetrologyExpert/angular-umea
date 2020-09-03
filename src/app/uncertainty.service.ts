@@ -1,5 +1,6 @@
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Injectable } from '@angular/core';
+import { map, distinct} from 'rxjs/operators'
 import { database } from 'firebase';
 
 @Injectable({
@@ -12,43 +13,31 @@ count: number = 0;
 
 
   constructor(private db: AngularFireDatabase,
-   ) { 
+   ) { }
 
+  getProduct(productId) {
+    return this.db.object('/instruments/' + productId);
   }
 
+  create(product) {
+    return this.db.list('/products/').push(product);
+  }
+     
+  updateProduct(productId, product){
+    return this.db.object('/products/' + productId).update(product);
+  }
 
-      clickCount(){
-        return this.count++;
-          }
+  delete(productId){
+    return this.db.object('/products/' + productId).remove();
+  }
 
-          
-      create(uncertainty){
-      return this.db.list('/uncertainty/').push(uncertainty);
-      }
-
-      createRow(uncId:string){
-        return this.db.object('/data'+ uncId);
-         
-      }
-
-      getAll(){
-      return  this.db.list('/uncertainty/');
-      }
-    
-      getAllContributions(){
-        return  this.db.list('/uncertainty/');
-
-      }
-
-    addIdNumber(){
-      return this.db.list('/uncertainty/').push({
-        dateCreated: new Date().getTime(),
-        tableNumber: this.clickCount(), 
-      });
-    }
-
-    getUncertaintyById(uncId: string) {
-      return this.db.object('/uncertainty/' + uncId)
-    }
+  getAll() {
+    return this.db.list<any>('/products').snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => ({ key: a.key, ...a.payload.val() }))
+        )
+      );
+  }
 
 }

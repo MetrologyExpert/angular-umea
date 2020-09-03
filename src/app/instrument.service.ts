@@ -10,6 +10,7 @@ export class InstrumentService {
   constructor(private db:AngularFireDatabase) { }
  instrument: any;
  uncertainty;
+ 
  id;
 
   create(instrument){
@@ -21,9 +22,16 @@ export class InstrumentService {
     return this.db.list('/instruments/');
   }
 
+  getDetails(instrumentId){
+    return this.db.list('/instruments/' + instrumentId).valueChanges();
+
+  }
+
   getInstrument(instrumentId) {
     return this.db.object('/instruments/' + instrumentId);
   }
+
+
 
   updateInstrument(instrumentId, instrument){
     return this.getInstrument(instrumentId).update(instrument);

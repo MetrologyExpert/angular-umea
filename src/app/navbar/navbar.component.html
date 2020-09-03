@@ -1,4 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+  <div class="container">
     <a class="navbar-brand" routerLink="/">Knowledge Academy</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -6,6 +7,10 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="navbar-nav mr-auto">
+        <!-- Add shopping cart menu here -->
+      </ul>
+
+      <ul class="navbar-nav">
         <ng-template #anonymousUser>
           <li class="nav-item active">
             <a class="nav-link" routerLink="/login">Login <span class="sr-only">(current)</span></a>
@@ -21,6 +26,7 @@
           </div>
         </li>
       </ul>
-     
+
     </div>
-  </nav>
+  </div>
+</nav>

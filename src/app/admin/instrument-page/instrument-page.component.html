@@ -1,4 +1,155 @@
-<div class="row">
+<h2>Instrument List</h2>
+
+<form [formGroup]="instrumentProfile" #f="ngForm" (ngSubmit)="save()">
+  <div class="form-group" formGroupName="instrument_details">
+    <label>Instrument Name <input class="form-control" formControlName="name" required/></label>
+    <!-- Validation ***name*** -->
+      <div class="alert alert-danger" *ngIf="name.invalid && name.touched ">
+         <div *ngIf="name.errors.required">
+           Instrument name is required!
+         </div>
+         <div *ngIf="name.errors.minlength">
+          Minimum 6 characters!
+         </div>
+      </div>
+    <p></p>
+    <label>Manufacturer <input class="form-control" formControlName="manufacturer"/></label>
+    <!-- Validation ***manufacturer*** -->
+  
+    <p></p>
+    <label>Model <input class="form-control" formControlName="model"/></label>
+    <!-- Validation ***model*** -->
+   
+    <p></p>
+    <label>Description <input class="form-control" formControlName="description"/></label>
+    <!-- Validation ***description*** -->
+    
+    <p></p>
+    <button class="btn btn-primary"  type="button" (click)="addUncertainty()">Add Uncertainty</button>
+  </div>
+  <p></p>
+  <p>
+  </p>
+  
+  <hr />
+  <div class="form-group" formArrayName="uncertaintyTable">
+    <div
+      class="uncertaintyTable"
+      *ngFor="
+        let unc of getPathUncertainty();
+        let uncertaintyIndex = index
+      "
+      [formGroupName]="uncertaintyIndex"
+    >
+      <label > <h5>Case {{uncertaintyIndex + 1}} </h5>
+        <input class="form-control" formControlName="case" /> </label>
+        <!-- Validation ***case*** -->
+        <div  class="alert alert-danger" *ngIf="unc.get('case').touched">Please describe your measurement case</div>
+
+      <div class="float-right">
+        <button class="btn btn-outline-danger"  (click)="deleteUncertainty(uncertaintyIndex)">Delete Uncertainty</button>
+      </div>
+
+      <p></p>
+      <button class="btn btn-primary" type="button" (click)="addContribution(unc)">Add Contribution</button>
+      <hr />
+      <div formArrayName="contributions">
+
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Estimate</th>
+                <th scope="col">Divisor</th>
+                <th scope="col">PDF</th>
+                <th scope="col">Std.Unc</th>
+                <th scope="col">SC</th>
+                <th scope="col">Std.Unc</th>
+                <th scope="col">Std.Unc^2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr  class="contributions"
+              *ngFor="
+                let con of unc.get('contributions').controls;
+                let conIndex = index
+              "
+              [formGroupName]="conIndex"
+              >
+                <th scope="row">{{conIndex + 1}}</th>
+                <td><input class="form-control" formControlName="title" /></td>
+                <!-- Validation ***title*** -->
+                <!-- <div  class="alert alert-danger" *ngIf="con.get('title').touched">
+                  Please give me title
+                </div> -->
+
+                <td><input class="form-control" formControlName="estimate"/></td>
+                <td><input class="form-control" type="text" placeholder={{val}}></td>
+                <td><select class="form-control" formControlName="divisor" id="divisor" (change)=onKey($event)>
+                    <option value="3" >Normal</option>
+                    <option value="sqrt(3)">Rectangular</option>
+                    <option value="2">Triangular</option>
+                   </select>
+                </td>
+                <td><input class="form-control" formControlName="stdunc_before"/></td>  
+                <td><input class="form-control" formControlName="sc"/></td>        
+                <td><input class="form-control" formControlName="stdunc_after"/></td> 
+                <td><input class="form-control" formControlName="sqrtunc"/></td> 
+                <td><button class="btn btn-outline-danger" (click)="deleteContribution(unc, conIndex)">x</button></td> 
+               </tr> 
+            </tbody>
+          </table>
+          <!-- <label>Title </label> -->
+          <!-- <label>Estimate </label> -->
+          <!-- <label for="divisor">Divisor </label> -->
+          <!-- <label>Standard Uncertainty </label>
+          <label>Sensitivity Coefficient </label>
+          <label>Standard Uncertainty After </label> -->
+         </div>
+      <hr />
+    </div>
+  </div>
+  <div class="float-right">
+    <button class="btn btn-primary" type="submit" >Submit</button>
+  </div>
+  <p></p>
+  <p></p>
+  <p></p>
+  <p></p>
+  <p></p>
+  <p></p>
+  <p></p>
+  <p></p>
+
+<p></p>
+  Form Status: {{ instrumentProfile.status }}
+
+</form>
+
+<!-- <article>
+    <h1>Angula Get Selected Option Value</h1>
+    <h2><span>Select a day:</span></h2>
+    <select (change)="selectChangeHandler($event)">
+        <option value="1">Monday</option>
+        <option value="2">Tuesday</option>
+        <option value="3">Wednesday</option>
+        <option value="4">Thursday</option>
+        <option value="5">Friday</option>
+    </select>
+    <input {{selectedDay}}>
+    <p><span>You selected: </span><b>{{selectedDay/3}}</b></p>
+</article> -->
+
+{{ this.instrumentProfile.value | json }}
+
+
+
+
+
+
+
+<!-- <div class="row">
     <div class="col-md-6">
       <form #f="ngForm" (ngSubmit)="save(f.value)">
 
@@ -63,3 +214,4 @@
         </div>
       </div>
 </div>
+ -->
