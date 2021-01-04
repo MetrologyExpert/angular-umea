@@ -35,7 +35,7 @@ export class InstrumentPageComponent  {
       this.instrumentId = this.route.snapshot.paramMap.get('id'); 
       console.warn(this.instrumentId); 
 
-     if (this.instrumentId) this.instrumentService.getInstrument(this.instrumentId).valueChanges().pipe(take(1)).subscribe(i => this.instrumentProfile.setValue(i));
+     if (this.instrumentId) this.instrumentService.getInstrument(this.instrumentId).valueChanges().pipe().subscribe(i => this.instrumentProfile.setValue(i));
       
     }
 
@@ -63,7 +63,6 @@ ngOnInit(){
         return this.fb.group({
           title: "",
           estimate: "",
-          divisor: [this.divisor], 
           stdunc_before:"",
           sc:"",
           stdunc_after:"",
@@ -71,9 +70,7 @@ ngOnInit(){
         });
       }
   
-      get divisor():number{
-        return this.val;
-      }
+      
 
       // Getter for controls
       get name(){
@@ -130,11 +127,9 @@ ngOnInit(){
   row = {row:"number 1"};
   instrumentId;
   
-
    constructor( 
     private router: Router,
     private route: ActivatedRoute,
-
     private categoryService: CategoryService,
     private instrumentService: InstrumentService,
     private uncertaintyService: UncertaintyService) { 
@@ -151,14 +146,12 @@ ngOnInit(){
       
     }
   
-
   save(instrument) {
     if (this.instrumentId) { this.instrumentService.updateInstrument(this.instrumentId, instrument)}
     else
      {this.instrumentService.create(instrument)}; 
       this.router.navigate(['/admin/instruments-list']);
    }
-
    delete() {
      if(confirm('Are you sure you want to delete this instrument?')){
       this.instrumentService.delete(this.instrumentId);

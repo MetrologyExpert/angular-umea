@@ -41,5 +41,10 @@ export class InstrumentService {
     return this.db.object('/instruments/' + instrumentId).remove();
   }
 
+  readInstrumentrData(id){
+    // return this.db.object('address' + id);
+    return this.db.object('/admin/instrument-page/' + id)
+
+  }
  
 }

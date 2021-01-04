@@ -24,6 +24,7 @@ instruments$: Observable<any>;
     );
    }
 
-   
+    delete(key)
+   { this.instrumentService.delete(key);}
 
 }

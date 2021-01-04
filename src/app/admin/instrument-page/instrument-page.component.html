@@ -41,7 +41,7 @@
       "
       [formGroupName]="uncertaintyIndex"
     >
-      <label > <h5>Case {{uncertaintyIndex + 1}} </h5>
+      <label > <h5>Case {{uncertaintyIndex + 1}}</h5>
         <input class="form-control" formControlName="case" /> </label>
         <!-- Validation ***case*** -->
         <div  class="alert alert-danger" *ngIf="unc.get('case').touched">Please describe your measurement case</div>
@@ -86,12 +86,12 @@
 
                 <td><input class="form-control" formControlName="estimate"/></td>
                 <td><input class="form-control" type="text" placeholder={{val}}></td>
-                <td><select class="form-control" formControlName="divisor" id="divisor" (change)=onKey($event)>
+                <!-- <td><select class="form-control" formControlName="divisor" id="divisor" (change)=onKey($event)>
                     <option value="3" >Normal</option>
                     <option value="sqrt(3)">Rectangular</option>
                     <option value="2">Triangular</option>
                    </select>
-                </td>
+                </td> -->
                 <td><input class="form-control" formControlName="stdunc_before"/></td>  
                 <td><input class="form-control" formControlName="sc"/></td>        
                 <td><input class="form-control" formControlName="stdunc_after"/></td> 
@@ -152,25 +152,20 @@
 <!-- <div class="row">
     <div class="col-md-6">
       <form #f="ngForm" (ngSubmit)="save(f.value)">
-
         <div class="form-group">
             <label for="title">Title</label>
             <input #title="ngModel" [(ngModel)]="instrument.title" name="title" id="title" type="text" class="form-control" required>
             <div class="alert alert-danger" *ngIf="title.touched && title.invalid">Title is required </div>
         </div>
-
         <div class="form-group">
             <label for="manufacturer">Manufacturer</label>
             <input #manufacturer="ngModel" [(ngModel)]="instrument.manufacturer" name="manufacturer" id="manufacturer" type="text" class="form-control" required>
             <div class="alert alert-danger" *ngIf="manufacturer.touched && manufacturer.invalid">Manufacturer is required</div>
-
         </div>
-
         <div class="form-group">
             <label for="model">Model</label>
             <input #model="ngModel" [(ngModel)]="instrument.model" name="model" id="model" type="text" class="form-control" required>
             <div class="alert alert-danger" *ngIf="model.touched && model.invalid">Model is required</div>
-
         </div>
         
         <div class="form-group">
@@ -180,9 +175,7 @@
                 <option *ngFor="let c of categories$ | async" [value] = "c.key" > {{ c.payload.val().name }}</option>
             </select>
             <div class="alert alert-danger" *ngIf="model.touched && model.invalid">Category is required</div>
-
         </div>
-
         <div class="form-group">
             <label for="price" >Price</label>
             <div class="input-group-prepend">
@@ -191,7 +184,6 @@
                 <div class="alert alert-danger" *ngIf="price.touched && price.invalid">Price is required</div>
             </div>
         </div>
-
         <div class="form-group">
             <label for="imageUrl">Image URL</label>
             <div class="input-group-prepend">
@@ -199,7 +191,6 @@
             <div class="alert alert-danger" *ngIf="imageUrl.touched && imageUrl.invalid">Image is required</div>
             </div>
         </div>
-
             <button class="btn btn-primary">Save</button>
             <button (click) = "delete()" class="btn btn-danger">Delete</button>
         </form> 
