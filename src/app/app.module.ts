@@ -27,6 +27,7 @@ import { CategoryService } from './category.service';
 import { InstrumentService } from './instrument.service';
 import { AuthService } from './auth.service';
 import { UncertaintyService } from './uncertainty.service';
+import { InstrumentPageViewComponent } from './admin/instrument-page-view/instrument-page-view.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { UncertaintyService } from './uncertainty.service';
     NavbarComponent,
     HomeComponent,
     LoginComponent,
-    UncertaintyPageComponent
+    UncertaintyPageComponent,
+    InstrumentPageViewComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +60,9 @@ import { UncertaintyService } from './uncertainty.service';
 
        {path:'admin/instrument-page/:id', 
        component:InstrumentPageComponent},
+
+       {path:'admin/instrument-page-view/:id',
+       component:InstrumentPageViewComponent},
 
       {path:'admin/uncertainty-page/:id', 
       component:UncertaintyPageComponent},

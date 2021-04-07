@@ -22,6 +22,8 @@ export class InstrumentService {
     return this.db.list('/instruments/');
   }
 
+
+
   getDetails(instrumentId){
     return this.db.list('/instruments/' + instrumentId).valueChanges();
 
@@ -29,6 +31,10 @@ export class InstrumentService {
 
   getInstrument(instrumentId) {
     return this.db.object('/instruments/' + instrumentId);
+  }
+
+  getUncertainty(instrumentId, uncertaintyId) {
+    return this.db.object('/instruments/' + instrumentId+'/uncertaintyTable/'+ uncertaintyId);
   }
 
 

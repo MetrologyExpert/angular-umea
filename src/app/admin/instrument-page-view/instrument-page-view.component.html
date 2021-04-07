@@ -1,0 +1,52 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Instrument</th>
+        <th scope="col">Manucturer</th>
+        <th scope="col">Model</th>
+        <th scope="col">Description</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>{{name}}</td>
+        <td>{{manufacturer}}</td>
+        <td>{{model}}</td>
+        <td>{{description}}</td>
+</table>
+<p></p>
+
+<div *ngFor=" let u of uncertaintyTable">
+  Case: {{u.case}}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Estimate</th>
+      <th scope="col">Divisor</th>
+      <th scope="col">PDF</th>
+      <th scope="col">Std.Unc</th>
+      <th scope="col">SC</th>
+      <th scope="col">Std.Unc</th>
+      <th scope="col">Std.Unc^2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of u.contributions">
+      <th scope="row" ></th>
+      <td>{{c.title}}</td>
+      <td>{{c.estimate}}</td>
+      <td>pdf</td>
+      <td>divisor</td>
+      <td>{{c.stdunc_before}}<td>
+      <td>{{c.sc}}</td>
+      <td>{{c.stdunc_after}}</td>
+      <td>{{c.sqrtunc}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>

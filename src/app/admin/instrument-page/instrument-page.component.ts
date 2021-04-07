@@ -3,11 +3,12 @@ import { InstrumentService } from './../../instrument.service';
 import { CategoryService } from './../../category.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@angular/forms';
-import { take } from 'rxjs/operators';
-import { map } from 'rxjs/operators'
 import * as firebase from 'firebase/app';
 
 import { Component, OnInit } from '@angular/core';
+import { title } from 'process';
+import { delay } from 'rxjs/operators';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'instrument-page',
@@ -22,6 +23,11 @@ export class InstrumentPageComponent  {
   selectedDay: any = 1;
   instrument = <any>{ };  
   instrumentId;
+  arr:any[];
+
+  contributionsArray = [];
+  
+
   constructor (
     private fb: FormBuilder,
     private router: Router,
@@ -33,24 +39,61 @@ export class InstrumentPageComponent  {
     ) { 
 
       this.instrumentId = this.route.snapshot.paramMap.get('id'); 
-      console.warn(this.instrumentId); 
+      // console.log(this.instrumentServi(ce.getUncertainty(this.instrumentId,0))
 
-     if (this.instrumentId) this.instrumentService.getInstrument(this.instrumentId).valueChanges().pipe().subscribe(i => this.instrumentProfile.setValue(i));
-      
-    }
+     if (this.instrumentId) this.instrumentService.getInstrument(this.instrumentId).valueChanges().subscribe( instrument => {
+       this.instrument = instrument;
+
+        
+        for (let u of instrument['uncertaintyTable'])
+        { 
+          console.log(u.case);
+           this.contributionsArray = [];
+            for (let c of u.contributions){
+              // 
+              this.contributionsArray.push(this.contributions);
+               console.log(c);
+           }
+
+            //u log
+        (this.instrumentProfile.get('uncertaintyTable')as FormArray).push(this.fb.group({
+          case: ["",[Validators.required]],
+          contributions: this.fb.array(this.contributionsArray)
+        })
+        );
+        }
+
+       
+        
+         
+      // (this.instrumentProfile.get('uncertaintyTable')as FormArray).push(this.fb.group({
+      //     case: ["",[Validators.required]],
+      //     contributions: this.fb.array([this.contributions, this.contributions])
+      //   })
+      //   );
+
+      // (this.instrumentProfile.get('uncertaintyTable')as FormArray).push(this.fb.group({
+      //   case: ["",[Validators.required]],
+      //   contributions: this.fb.array([this.contributions, this.contributions])
+      // })
+      // );
+
+       this.instrumentProfile.patchValue(instrument);           
+      }
+
+       );  
+    } 
 
 ngOnInit(){  
   this.instrumentProfile = this.fb.group({
   instrument_details: this.fb.group({
-    name: ["", [Validators.required, Validators.minLength(6)]],
+    name: ['', [Validators.required, Validators.minLength(6)]],
     manufacturer:["",[Validators.required]],
     model:["", [Validators.required]],
     description: ["",[Validators.required]]
-  }),
-  uncertaintyTable: this.fb.array([this.uncertaintyTable])
-});
-
-      }
+     }),
+  uncertaintyTable: this.fb.array([])
+    });}
 
       get uncertaintyTable(): FormGroup {
         return this.fb.group({
@@ -93,11 +136,21 @@ ngOnInit(){
         unc.get("contributions").removeAt(index);
       }
     
+      uncertainty(){
+        (<FormArray>this.instrumentProfile.get("uncertaintyTable"));
+
+      }
+
+
       getPathUncertainty(){
         return (<FormArray>this.instrumentProfile.get('uncertaintyTable')).controls;
       }
  
-     /*  selectChangeHandler (event: any) {
+      loadCase(patchVal:number) {
+        this.fb.control(patchVal);
+      }
+
+     /*  selectChangeHandler (event: any) { 
         //update the ui
         this.selectedDay = event.target.value;
       } */

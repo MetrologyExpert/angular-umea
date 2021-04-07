@@ -23,7 +23,9 @@
         <tr *ngFor="let i of instruments$ | async">
             <td>{{ i.name }}</td>
             <td>{{ i.manufacturer }}</td>
-            <td> <button class="btn btn-primary" [routerLink]="['/admin/instrument-page/', i.key]" >Edit  </button></td>
+            <td> <button class="btn btn-primary" [routerLink]="['/admin/instrument-page/', i.key]" >Edit</button></td>
+            <td> <button class="btn btn-secondary" [routerLink]="['/admin/instrument-page-view/', i.key]" >Page View</button></td>
+
             <td> <button class="btn btn-danger " type="button" (click)="delete(i.key)"> Delete</button></td>
         </tr>
     </tbody>
