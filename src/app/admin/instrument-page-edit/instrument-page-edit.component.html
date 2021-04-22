@@ -1,3 +1,4 @@
+<p>instrument-page-edit works!</p>
 <h2>Instrument List</h2>
 
 <form [formGroup]="instrumentProfile" #f="ngForm" (ngSubmit)="save()">
@@ -45,17 +46,18 @@
     >
       <label > <h5>Case {{uncertaintyIndex + 1}}</h5>
         <input class="form-control" formControlName="case" /> </label>
-
-        <!-- Validation ***case*** -->       
-
+        <!-- Validation ***case*** -->
         <div  class="alert alert-danger" *ngIf="unc.get('case').touched">Please describe your measurement case</div>
-     <p></p>
 
+      <div class="float-right">
+        <button class="btn btn-outline-danger"  (click)="deleteUncertainty(uncertaintyIndex)">Delete Uncertainty</button>
+      </div>
+
+      <p></p>
       <button class="btn btn-primary" type="button" (click)="addContribution(unc)">Add Contribution</button>
-      <button class="btn btn-outline-danger"  (click)="deleteUncertainty(uncertaintyIndex)">Delete Uncertainty</button>
-
       <hr />
       <div formArrayName="contributions">
+
         <table class="table table-striped">
             <thead>
               <tr>
@@ -79,7 +81,6 @@
               [formGroupName]="conIndex"
               >
                 <th scope="row">{{conIndex + 1}}</th>
-
                 <td><input class="form-control" formControlName="title" /></td>
                 <!-- Validation ***title*** -->
                 <!-- <div  class="alert alert-danger" *ngIf="con.get('title').touched">
@@ -88,7 +89,7 @@
 
                 <td><input class="form-control" formControlName="estimate"/></td>
                 <td>
-                    <select class="form-control" style="width: 100px;" formControlName="pdf" (change)="selectChangeHandler($event)">
+                    <select class="form-control" style="width: 150px;" formControlName="pdf" (change)="selectChangeHandler($event)">
                         <option value="1">Normal</option>
                         <option value="2">Normal</option>
                         <option value="3">Normal</option>
@@ -107,22 +108,16 @@
                 <td><input class="form-control" formControlName="stdUnc_before"/></td>  
                 <td><input class="form-control" formControlName="sc"/></td>        
                 <td><input class="form-control" formControlName="stdUnc_after"/></td> 
-                <td><input class="form-control" formControlName="stdUnc_pow" /></td> 
-
+                <td><input class="form-control" placeholder="stdUnc_pow"/></td> 
                 <td><button class="btn btn-outline-danger" (click)="deleteContribution(unc, conIndex)">x</button></td> 
-               </tr>
-               <tr scope="row" style="text-align: right;">
-                Total uncertainty: <td colspan="3"> <input type="text" style="text-align: right;" class="form-control" placeholder="{{this.stdUnc[uncertaintyIndex]}}" disabled="true" /></td>
-               </tr>
+               </tr> 
             </tbody>
-            </table>
+          </table>
          </div>
-      <hr/>
-      <hr>
+      <hr />
     </div>
   </div>
   <div class="float-right">
-
     <button class="btn btn-primary" type="submit" >Submit</button>
   </div>
   <p></p>

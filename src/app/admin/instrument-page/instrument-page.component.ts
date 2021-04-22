@@ -6,9 +6,7 @@ import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@ang
 import * as firebase from 'firebase/app';
 
 import { Component, OnInit } from '@angular/core';
-import { title } from 'process';
-import { delay } from 'rxjs/operators';
-import { threadId } from 'worker_threads';
+import { max } from 'rxjs/operators';
 
 @Component({
   selector: 'instrument-page',
@@ -20,13 +18,21 @@ export class InstrumentPageComponent  {
 
   instrumentProfile:FormGroup;
   val: number ;
-  selectedDay: any = 1;
   instrument = <any>{ };  
   instrumentId;
   arr:any[];
 
+  selectedValue;
+  stdUnc = [];
+
+
+  // contributionsValueChanges$;
   contributionsArray = [];
-  
+  totalStdUnc:number;
+  total:number;
+  instrumentSubscribe$
+  myFormValueChanges$;
+
 
   constructor (
     private fb: FormBuilder,
@@ -41,48 +47,42 @@ export class InstrumentPageComponent  {
       this.instrumentId = this.route.snapshot.paramMap.get('id'); 
       // console.log(this.instrumentServi(ce.getUncertainty(this.instrumentId,0))
 
-     if (this.instrumentId) this.instrumentService.getInstrument(this.instrumentId).valueChanges().subscribe( instrument => {
+     if (this.instrumentId) this.instrumentSubscribe$;
+     
+     this.instrumentSubscribe$ = this.instrumentService.getInstrument(this.instrumentId).valueChanges().subscribe( instrument => {
        this.instrument = instrument;
 
-        
         for (let u of instrument['uncertaintyTable'])
-        { 
-          console.log(u.case);
-           this.contributionsArray = [];
-            for (let c of u.contributions){
-              // 
-              this.contributionsArray.push(this.contributions);
-               console.log(c);
-           }
+        {        
+          this.total = 0;
 
-            //u log
-        (this.instrumentProfile.get('uncertaintyTable')as FormArray).push(this.fb.group({
-          case: ["",[Validators.required]],
-          contributions: this.fb.array(this.contributionsArray)
-        })
-        );
+           this.contributionsArray = [];
+
+          let i=0;
+            for (let c of u.contributions){
+              i++;
+              this.contributionsArray.push(this.contributions);
+              
         }
 
        
-        
-         
-      // (this.instrumentProfile.get('uncertaintyTable')as FormArray).push(this.fb.group({
-      //     case: ["",[Validators.required]],
-      //     contributions: this.fb.array([this.contributions, this.contributions])
-      //   })
-      //   );
-
-      // (this.instrumentProfile.get('uncertaintyTable')as FormArray).push(this.fb.group({
-      //   case: ["",[Validators.required]],
-      //   contributions: this.fb.array([this.contributions, this.contributions])
-      // })
-      // );
-
-       this.instrumentProfile.patchValue(instrument);           
-      }
-
-       );  
+            //u log
+        (this.instrumentProfile.get('uncertaintyTable')as FormArray).push(this.fb.group({
+          case: ['',[Validators.required]],
+          contributions: this.fb.array(this.contributionsArray)
+        }));
+        }
+        this.instrumentProfile.patchValue(instrument);
+      });  
     } 
+
+   
+
+    //event handler for the select element's change event
+    selectChangeHandler (event: any) {
+      //update the ui
+      this.selectedValue = event.target.value;
+    }
 
 ngOnInit(){  
   this.instrumentProfile = this.fb.group({
@@ -93,24 +93,35 @@ ngOnInit(){
     description: ["",[Validators.required]]
      }),
   uncertaintyTable: this.fb.array([])
-    });}
+    });
+
+   // initialize stream on contributiona
+   this.myFormValueChanges$ = (this.instrumentProfile.get('uncertaintyTable')).valueChanges;
+   // subscribe to the stream so listen to changes on units
+   this.myFormValueChanges$.subscribe(uncertaintyTab => {
+    // uncertaintyTab.reset; 
+    this.updateTotalUncertainty(uncertaintyTab)});
+
+  }
 
       get uncertaintyTable(): FormGroup {
         return this.fb.group({
           case: ["",[Validators.required]],
-          contributions: this.fb.array([this.contributions])
+          contributions: this.fb.array([this.contributions]),
         });
       }
 
       get contributions(): FormGroup {
         return this.fb.group({
-          title: "",
-          estimate: "",
-          stdunc_before:"",
-          sc:"",
-          stdunc_after:"",
-          sqrtunc:""
+          title: '',
+          estimate: '',
+          pdf: '',
+          stdUnc_before:{value:'', disabled:true},
+          sc:'',
+          stdUnc_after:{value:'', disabled:true},
+          stdUnc_pow:new FormControl({value:'', disabled:true}),
         });
+
       }
   
       
@@ -131,6 +142,69 @@ ngOnInit(){
       addContribution(unc) {
         unc.get("contributions").push(this.contributions);
       }
+
+      private updateTotalUncertainty(uncertaintyTab:any){
+
+        let j=0;
+        // const control = (<FormArray>this.instrumentProfile.get('uncertaintyTable')).value[j];
+
+        // console.log( uncertaintyTab);
+        for (let u of uncertaintyTab){
+        // console.log(control);
+          // let control = ((((this.instrumentProfile.get('uncertaintyTable') as FormArray).controls[j].get('contributions') as FormGroup)).controls[0] as FormGroup).controls['stdUnc_before'].dirty;
+          // const control = (<FormArray>this.instrumentProfile.get('uncertaintyTable')).value[j]['contributions'];
+          // let control = (<FormArray>this.instrumentProfile.get('uncertaintyTable')).value[j];
+
+          let controlArray = ((this.instrumentProfile.get('uncertaintyTable') as FormArray).controls[j]);
+          j++;
+          this.total = 0;
+
+          let k =0;
+          for(let i in u.contributions){
+            k++;
+            let controlGroup = (((controlArray.get('contributions') as FormGroup)).controls[i] as FormGroup)
+            let controlForm_stdUncB = controlGroup.controls['stdUnc_before'];
+            let stdUnc = (u.contributions[i].estimate/u.contributions[i].pdf);
+            controlForm_stdUncB.setValue(stdUnc,{onlySelf:true, emitEvent: false});
+
+            let standardUncertainty_after = (stdUnc *u.contributions[i].sc);
+            let controlForm_stdUncA = controlGroup.controls['stdUnc_after'];
+            controlForm_stdUncA.setValue(standardUncertainty_after,{onlySelf:true, emitEvent: false});
+
+            let stdUnc_pow = +Math.pow(standardUncertainty_after,2);
+            let controlForm_stdUnc_power = controlGroup.controls['stdUnc_pow'];
+            controlForm_stdUnc_power.setValue(stdUnc_pow,{onlySelf:true, emitEvent: false});  
+
+            this.total += stdUnc_pow;
+            
+            // console.log(controlForm_stdUnc_power);
+
+            //  if ( !isNaN(stdUnc_pow)){
+            //     this.total += stdUnc_pow;
+            //     if ( max())
+            //       console.log('index:'+ (j+ ' , ' +i) + 'total:'+this.total  );
+            //  }
+
+            
+    
+          }
+
+          this.stdUnc.length = j-1;
+
+
+          if ( !isNaN(this.total)){
+
+          if (k = u.contributions.length){
+
+            console.log(k + '=' +u.contributions.length);
+
+            this.stdUnc.push(Math.sqrt(this.total));
+            console.log(this.stdUnc);
+          }
+        }
+        }
+      }
+
     
       deleteContribution(unc, index) {
         unc.get("contributions").removeAt(index);
@@ -150,65 +224,17 @@ ngOnInit(){
         this.fb.control(patchVal);
       }
 
-     /*  selectChangeHandler (event: any) { 
-        //update the ui
-        this.selectedDay = event.target.value;
-      } */
-
-       onKey (event: any) {
-        //update the ui
-        this.val = event.target.value;
-      } 
-
       save() {
         if (this.instrumentId) { this.instrumentService.updateInstrument(this.instrumentId, this.instrumentProfile.value)}
         else
          {this.instrumentService.create(this.instrumentProfile.value)}; 
           this.router.navigate(['/admin/instruments-list']);
-
         console.warn(this.instrumentProfile.value);
-        // if (this.instrumentId) { this.instrumentService.updateInstrument(this.instrumentId, instrument)}
-        // else
-        // {this.instrumentService.create(instrument)}; 
-        // this.router.navigate(['/admin/instruments-list']);
        }
 
-  /* instrument = <any>{ };
-  categories$;
-  instruments$;
-  uncertainty = {title:"Temperature"};
-  row = {row:"number 1"};
-  instrumentId;
-  
-   constructor( 
-    private router: Router,
-    private route: ActivatedRoute,
-    private categoryService: CategoryService,
-    private instrumentService: InstrumentService,
-    private uncertaintyService: UncertaintyService) { 
-    
-      //Fill up dropdown list
-     this.categories$ = categoryService.getCategories();
-      //add Id to Edit Page 
-     this.instrumentId = this.route.snapshot.paramMap.get('id');  
-     if (this.instrumentId) this.instrumentService.getInstrument(this.instrumentId).valueChanges().pipe(take(1)).subscribe(i => this.instrument = i);
-     
-     this.instruments$ = this.instrumentService.getAll().snapshotChanges().pipe(
-      map(changes => 
-        changes.map(c => ({ key: c.payload.key, ...c.payload.exportVal()}))));
+       onDestroy(){
+        this.instrumentSubscribe$
+        this.myFormValueChanges$;
       
-    }
-  
-  save(instrument) {
-    if (this.instrumentId) { this.instrumentService.updateInstrument(this.instrumentId, instrument)}
-    else
-     {this.instrumentService.create(instrument)}; 
-      this.router.navigate(['/admin/instruments-list']);
-   }
-   delete() {
-     if(confirm('Are you sure you want to delete this instrument?')){
-      this.instrumentService.delete(this.instrumentId);
-      this.router.navigate(['/admin/instruments-list']);
-     }
-   } */
+       }
 }

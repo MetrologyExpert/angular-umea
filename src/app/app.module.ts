@@ -3,6 +3,7 @@
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+
 //Angular Firebase
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from "@angular/fire/auth";
@@ -20,6 +21,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { InstrumentsListComponent } from './admin/instruments-list/instruments-list.component';
 import { InstrumentPageComponent } from './admin/instrument-page/instrument-page.component';
+import { InstrumentPageViewComponent } from './admin/instrument-page-view/instrument-page-view.component';
+import { InstrumentPageEditComponent } from './admin/instrument-page-edit/instrument-page-edit.component';
 import { UncertaintyPageComponent } from './admin/uncertainty-page/uncertainty-page.component';
 import { environment } from 'src/environments/environment';
 //Services
@@ -27,7 +30,6 @@ import { CategoryService } from './category.service';
 import { InstrumentService } from './instrument.service';
 import { AuthService } from './auth.service';
 import { UncertaintyService } from './uncertainty.service';
-import { InstrumentPageViewComponent } from './admin/instrument-page-view/instrument-page-view.component';
 
 
 @NgModule({
@@ -39,7 +41,8 @@ import { InstrumentPageViewComponent } from './admin/instrument-page-view/instru
     HomeComponent,
     LoginComponent,
     UncertaintyPageComponent,
-    InstrumentPageViewComponent
+    InstrumentPageViewComponent,
+    InstrumentPageEditComponent
   ],
   imports: [
     BrowserModule,
@@ -58,11 +61,14 @@ import { InstrumentPageViewComponent } from './admin/instrument-page-view/instru
       {path:'admin/instrument-page/new',
        component:InstrumentPageComponent},
 
-       {path:'admin/instrument-page/:id', 
+      {path:'admin/instrument-page/:id', 
        component:InstrumentPageComponent},
 
-       {path:'admin/instrument-page-view/:id',
+      {path:'admin/instrument-page-view/:id',
        component:InstrumentPageViewComponent},
+
+      {path:'admin/instrument-page-edit/:id',
+      component:InstrumentPageEditComponent},
 
       {path:'admin/uncertainty-page/:id', 
       component:UncertaintyPageComponent},
