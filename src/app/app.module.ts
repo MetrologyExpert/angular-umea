@@ -1,8 +1,29 @@
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatInputModule } from '@angular/material/input';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { CdkTableModule } from '@angular/cdk/table';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { A11yModule } from '@angular/cdk/a11y';
+
+import {MatTableModule} from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinnerModule} from '@angular/material/progress-spinner'
+
+
+import { HttpClientModule} from '@angular/common/http';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 //Angular Firebase
 import { AngularFireDatabaseModule } from '@angular/fire/database';
@@ -14,7 +35,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 //Bootstrap Ng module
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+//Summernote
 //Components
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -30,6 +52,35 @@ import { CategoryService } from './category.service';
 import { InstrumentService } from './instrument.service';
 import { AuthService } from './auth.service';
 import { UncertaintyService } from './uncertainty.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GalleryComponent } from './pictures/gallery/gallery.component';
+
+@NgModule({
+  exports: [
+   // CDK
+   A11yModule,
+   OverlayModule,
+   CdkStepperModule,
+   CdkTableModule,
+   MatCardModule,
+   MatFormFieldModule,
+   MatDividerModule,
+   MatIconModule,
+   MatToolbarModule,
+   MatInputModule,
+   MatButtonModule,
+
+   MatInputModule,
+   MatTableModule, 
+   MatPaginatorModule,
+   MatSortModule,
+   MatProgressSpinnerModule
+
+],
+  declarations: [GalleryComponent], })
+
+export class MaterialModule {}
+
 
 
 @NgModule({
@@ -44,7 +95,10 @@ import { UncertaintyService } from './uncertainty.service';
     InstrumentPageViewComponent,
     InstrumentPageEditComponent
   ],
+
+
   imports: [
+   
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
@@ -53,8 +107,11 @@ import { UncertaintyService } from './uncertainty.service';
     AngularFireAuthModule,
     AppRoutingModule,
     NgbModule,
+    HttpClientModule, AngularEditorModule,
     RouterModule.forRoot([
       {path:'', component:HomeComponent},
+
+      {path:'pictures/gallery', component:GalleryComponent},
 
       {path:'login', component:LoginComponent},
 
@@ -83,7 +140,11 @@ import { UncertaintyService } from './uncertainty.service';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+
   ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [
     CategoryService,
     AuthService,

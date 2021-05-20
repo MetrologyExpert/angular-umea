@@ -1,12 +1,10 @@
-<table class="table">
+<table class="table table-striped">
     <thead>
       <tr>
         <th scope="col">#</th>
         <th scope="col">Instrument</th>
         <th scope="col">Manucturer</th>
         <th scope="col">Model</th>
-        <th scope="col">Description</th>
-
       </tr>
     </thead>
     <tbody>
@@ -15,38 +13,56 @@
         <td>{{name}}</td>
         <td>{{manufacturer}}</td>
         <td>{{model}}</td>
-        <td>{{description}}</td>
 </table>
 <p></p>
+<div>
+  <h3><b>Description</b></h3>
+  <div [innerHTML]="description"></div>
+  <!-- <div><p>{{description}}"></p></div> -->
+  <p></p>
+</div>
 
-<div *ngFor=" let u of uncertaintyTable">
-  Case: {{u.case}}
-<table class="table">
+<div *ngFor=" let u of uncertaintyTable; let y = index;">
+  <h3><b>Case:</b> {{u.case}}</h3>
+
+  <div *ngFor="let ix of u.imagePaths let x=index">
+    <img src="{{ix.imagePath}}" class="img-fluid rounded mx-auto d-block" alt="{{x}}">
+    <p></p>
+    {{ix.imageName}}
+</div>
+
+<table class="table table-striped">
   <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">Title</th>
       <th scope="col">Estimate</th>
-      <th scope="col">Divisor</th>
       <th scope="col">PDF</th>
-      <th scope="col">Std.Unc</th>
-      <th scope="col">SC</th>
-      <th scope="col">Std.Unc</th>
-      <th scope="col">Std.Unc^2</th>
+      <th scope="col">Divisor</th>
+      <th scope="col">Std.Uncertainty</th>
+      <th scope="col">Sensitivity Coeff.</th>
+      <th scope="col">Std.Uncertainty</th>
+
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let c of u.contributions">
-      <th scope="row" ></th>
+    <tr *ngFor="let c of u.contributions; let i=index">
+      <td># {{i}}</td>
       <td>{{c.title}}</td>
       <td>{{c.estimate}}</td>
-      <td>pdf</td>
-      <td>divisor</td>
-      <td>{{c.stdunc_before}}<td>
+      <td > {{this.pdfText[c.pdf]}} </td>
+      <td>{{c.pdf}}</td>
+      <td>{{c.estimate/c.pdf}}</td> 
       <td>{{c.sc}}</td>
-      <td>{{c.stdunc_after}}</td>
-      <td>{{c.sqrtunc}}</td>
+      <td>{{c.sc*(c.estimate/c.pdf)}}</td>
     </tr>
   </tbody>
 </table>
+<div style="text-align: right; background-color:rgb(217, 240, 255)">
+  <h3 style="padding: 0.75em;"><b>Total Standard Uncertainty: {{this.totalStdUnc[y]}}</b></h3>
+</div>
+<p></p>
+<div style="text-align: right; background-color:rgb(217, 240, 255)">
+  <h3 style="padding: 0.75em;"><b>Expanded Standard Uncertainty (k=2, p = 95%): {{this.totalStdUnc[y]*2}}</b></h3>
+</div>
 </div>

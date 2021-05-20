@@ -1,8 +1,9 @@
 <h2>Instrument List</h2>
 
 <form [formGroup]="instrumentProfile" #f="ngForm" (ngSubmit)="save()">
+
   <div class="form-group" formGroupName="instrument_details">
-    <label>Instrument Name <input class="form-control" formControlName="name" required/></label>
+    <label><b>Instrument Name</b> <input class="form-control" formControlName="name" required/></label>
     <!-- Validation ***name*** -->
       <div class="alert alert-danger" *ngIf="name.invalid && name.touched ">
          <div *ngIf="name.errors.required">
@@ -14,26 +15,33 @@
       </div>
     <p></p>
 
-    {{instrument.name}}
-    <label>Manufacturer <input class="form-control" formControlName="manufacturer"/></label>
+    <label><b>Manufacturer</b> <input class="form-control" formControlName="manufacturer"/></label>
     <!-- Validation ***manufacturer*** -->
   
     <p></p>
-    <label>Model <input class="form-control" formControlName="model"/></label>
+    <label><b>Model</b><input class="form-control" formControlName="model"/></label>
     <!-- Validation ***model*** -->
    
     <p></p>
-    <label>Description <input class="form-control" formControlName="description"/></label>
+    <label><b>Description</b> 
+      <!-- <textarea class="form-control" formControlName="description" cols="160"></textarea> -->
+    </label>
     <!-- Validation ***description*** -->
-    
-    <p></p>
-    <button class="btn btn-primary"  type="button" (click)="addUncertainty()">Add Uncertainty</button>
-  </div>
-  <p></p>
-  <p>
-  </p>
   
+    <angular-editor formControlName="htmlContent" formControlName="description" [config]="editorConfig"></angular-editor>
+
+
+    <p></p>
+    <button class="btn btn-primary"  type="button" (click)="addUncertainty()">Add Uncertainty Budget Table</button>
+    <p></p>
+
+  </div>
+
+    
+  <p></p>
   <hr />
+
+  <!-- Uncertainty Table Array -->
   <div class="form-group" formArrayName="uncertaintyTable">
     <div
       class="uncertaintyTable"
@@ -43,19 +51,93 @@
       "
       [formGroupName]="uncertaintyIndex"
     >
-      <label > <h5>Case {{uncertaintyIndex + 1}}</h5>
+   
+      <!-- Case control -->
+      <label > <h2>Case {{uncertaintyIndex + 1}}</h2>
         <input class="form-control" formControlName="case" /> </label>
-
+        
         <!-- Validation ***case*** -->       
-
         <div  class="alert alert-danger" *ngIf="unc.get('case').touched">Please describe your measurement case</div>
-     <p></p>
+     <div class="deleteUncertainty">
+      <button class="btn btn-outline-danger"  (click)="deleteUncertainty(uncertaintyIndex)">Delete Uncertainty</button> 
+      <p></p>
+    </div>
+    <p></p>
+    <button class="btn btn-success" type="button" (click)="addImage(unc)">Add Image</button>
 
+    <div formArrayName="imagePaths">
+     <table  style = "margin: auto;
+     width: 80%">
+       <tbody *ngFor="let imx of unc.get('imagePaths').controls; let i = index" [formGroupName]="i">
+        <tr>
+          <td><label>Image Path</label></td>
+        </tr>
+         <tr>
+           <td><input class="form-control" formControlName="imagePath" /></td>
+           <td><button class="btn btn-outline-danger" (click)="deleteImage(unc, i)">x
+           </button></td>
+ 
+         </tr>
+         <tr>
+          <td style="text-align: center;"><img src ="{{imx.controls['imagePath'].value}}"></td>
+        </tr>
+        <tr><td><label>Image Name</label></td></tr>
+         <tr>
+          <td><input class="form-control" formControlName="imageName" /></td>
+         </tr>
+         <tr>
+          <td></td>
+        </tr>
+       </tbody>
+        </table>
+
+     
+     <!-- {{this.image}} -->
+     <!-- <img src="{{this.image}}"> -->  
+    </div>
+  
+    <!-- FormArrayControl -->
+  
+
+    
+    
+    <!-- <ng-template #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Hi there!</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Hello, World!</p>
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>
+      </div>
+    </ng-template> -->
+    
+    <!-- <button class="btn btn-success" (click)="addImage">Add Image</button> -->
       <button class="btn btn-primary" type="button" (click)="addContribution(unc)">Add Contribution</button>
-      <button class="btn btn-outline-danger"  (click)="deleteUncertainty(uncertaintyIndex)">Delete Uncertainty</button>
+  
+      <!-- <button class="btn btn-success" type="button" (click)="addImagePaths(unc)">Add Image</button> -->      
 
+       <!-- <div *ngFor="let im of images">
+          <img [src]="im" >
+        <p></p>
+        </div>  -->
+
+        
       <hr />
+      <!-- //Form Array Contributions controls  -->
       <div formArrayName="contributions">
+
+        
+        <!-- <p></p>
+        <div *ngFor="let im of image">
+          <img [src]="im" >
+        <p></p>
+        </div> -->
+  
         <table class="table table-striped">
             <thead>
               <tr>
@@ -64,10 +146,11 @@
                 <th scope="col">Estimate</th>
                 <th scope="col">PDF</th>
                 <th scope="col">Divisor</th>
-                <th scope="col">Std.Unc</th>
-                <th scope="col">SC</th>
-                <th scope="col">Std.Unc</th>
-                <th scope="col">Std.Unc^2</th>
+                <th scope="col">Standard Uncertainty</th>
+                <th scope="col">Sens.Coeff.</th>
+                <th scope="col">Standard Uncertainty</th>
+                <!-- <th scope="col">Std.Unc^2</th> -->
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -86,7 +169,10 @@
                   Please give me title
                 </div> -->
 
-                <td><input class="form-control" formControlName="estimate"/></td>
+                <td class="input-group mb-3">
+
+                  <input class="form-control" formControlName="estimate"/>
+                  <span class="input-group-text">mm</span></td>
                 <td>
                     <select class="form-control" style="width: 100px;" formControlName="pdf" (change)="selectChangeHandler($event)">
                         <option value="1">Normal</option>
@@ -104,105 +190,49 @@
                     <option value="2">Triangular</option>
                    </select>
                 </td> -->
-                <td><input class="form-control" formControlName="stdUnc_before"/></td>  
+                <td class="input-group mb-3"><input class="form-control" formControlName="stdUnc_before"/><span class="input-group-text">mm</span></td>  
                 <td><input class="form-control" formControlName="sc"/></td>        
-                <td><input class="form-control" formControlName="stdUnc_after"/></td> 
-                <td><input class="form-control" formControlName="stdUnc_pow" /></td> 
+                <td class="input-group mb-3">
+                  <input class="form-control" formControlName="stdUnc_after"/>
+                  <span class="input-group-text">mm</span>
+                </td>
+                <!-- <td class="input-group mb-3"><input class="form-control" formControlName="stdUnc_after"/><span class="input-group-text">mm</span></td> -->
+                <!-- <td><input class="form-control" formControlName="stdUnc_pow" /></td>  -->
 
                 <td><button class="btn btn-outline-danger" (click)="deleteContribution(unc, conIndex)">x</button></td> 
+              </tr>
+              <tr>
+               <th colspan="10" style="text-align: right; background-color:rgb(217, 240, 255)" >Total uncertainty: {{this.stdUnc[uncertaintyIndex]}}</th>
+              </tr>
+              <tr>
+                <th colspan="10" style="text-align: right; background-color:rgb(217, 240, 255)">Expanded uncertainty (k=2): {{ 2*this.stdUnc[uncertaintyIndex]}}</th>
                </tr>
-               <tr scope="row" style="text-align: right;">
-                Total uncertainty: <td colspan="3"> <input type="text" style="text-align: right;" class="form-control" placeholder="{{this.stdUnc[uncertaintyIndex]}}" disabled="true" /></td>
+               <!-- <tr scope="row" style="text-align: right;">
+                 <td colspan="3"  class="input-group mb-3" colspan="3"> <input type="text" style="text-align: right;" class="form-control" placeholder="{{this.stdUnc[uncertaintyIndex]}}" disabled="true" /><span class="input-group-text">mm</span></td>
+               </tr> -->
+               <!-- <tr>
+                <th colspan="3">Expanded uncertainty:</th>
                </tr>
+               <tr>
+                 <td class="input-group mb-3" colspan="3"> <input type="text" style="text-align: right;" class="form-control" placeholder="{{ 2*this.stdUnc[uncertaintyIndex]}}" disabled="true" /><span class="input-group-text">mm</span></td>
+               </tr> -->
             </tbody>
-            </table>
-         </div>
-      <hr/>
+          </table>
+        </div>
       <hr>
     </div>
   </div>
+
   <div class="float-right">
 
     <button class="btn btn-primary" type="submit" >Submit</button>
   </div>
-  <p></p>
-  <p></p>
-  <p></p>
-  <p></p>
-  <p></p>
-  <p></p>
-  <p></p>
-  <p></p>
 
-<p></p>
-  Form Status: {{ instrumentProfile.status }}
-
-</form>
+   Form Status: {{ instrumentProfile.status }}
+  </form>
 
 
 
 {{ this.instrumentProfile.value | json }}
 
 
-
-
-
-
-
-<!-- <div class="row">
-    <div class="col-md-6">
-      <form #f="ngForm" (ngSubmit)="save(f.value)">
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input #title="ngModel" [(ngModel)]="instrument.title" name="title" id="title" type="text" class="form-control" required>
-            <div class="alert alert-danger" *ngIf="title.touched && title.invalid">Title is required </div>
-        </div>
-        <div class="form-group">
-            <label for="manufacturer">Manufacturer</label>
-            <input #manufacturer="ngModel" [(ngModel)]="instrument.manufacturer" name="manufacturer" id="manufacturer" type="text" class="form-control" required>
-            <div class="alert alert-danger" *ngIf="manufacturer.touched && manufacturer.invalid">Manufacturer is required</div>
-        </div>
-        <div class="form-group">
-            <label for="model">Model</label>
-            <input #model="ngModel" [(ngModel)]="instrument.model" name="model" id="model" type="text" class="form-control" required>
-            <div class="alert alert-danger" *ngIf="model.touched && model.invalid">Model is required</div>
-        </div>
-        
-        <div class="form-group">
-            <label for="category">Category</label>
-            <select #category="ngModel" [(ngModel)]="instrument.category" name="category" id="category"   type="text" class="form-control" required>
-                <option value=""></option>
-                <option *ngFor="let c of categories$ | async" [value] = "c.key" > {{ c.payload.val().name }}</option>
-            </select>
-            <div class="alert alert-danger" *ngIf="model.touched && model.invalid">Category is required</div>
-        </div>
-        <div class="form-group">
-            <label for="price" >Price</label>
-            <div class="input-group-prepend">
-                <span class="input-group-text">£</span>
-                <input #price="ngModel" [(ngModel)]="instrument.price" name="price" id="price" type="number" class="form-control" required>
-                <div class="alert alert-danger" *ngIf="price.touched && price.invalid">Price is required</div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="imageUrl">Image URL</label>
-            <div class="input-group-prepend">
-            <input #imageUrl="ngModel" [(ngModel)]="instrument.imageUrl" name="imageUrl" id="imageUrl" type="text" class="form-control" required>
-            <div class="alert alert-danger" *ngIf="imageUrl.touched && imageUrl.invalid">Image is required</div>
-            </div>
-        </div>
-            <button class="btn btn-primary">Save</button>
-            <button (click) = "delete()" class="btn btn-danger">Delete</button>
-        </form> 
- 
-    </div>
-  <div class="col-md-6">
-    <div class="card" style="width: 18rem;">
-        <img [src]="instrument.imageUrl" class="card-img-top" *ngIf="instrument.imageUrl" >
-        <div class="card-body">
-          <h5 class="card-title">{{instrument.title}}</h5>
-          <p class="card-text">{{instrument.price | currency:"USD":"symbol"}}</p>
-        </div>
-      </div>
-</div>
- -->

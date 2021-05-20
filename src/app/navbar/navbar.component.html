@@ -19,7 +19,7 @@
         <li ngbDropdown *ngIf="auth.user$ | async as user; else anonymousUser" class="nav-item dropdown">
           <a ngbDropdownToggle class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{user.displayName}}</a>
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" routerLink="/my-instruments">My Instruments</a>
+            <a class="dropdown-item" routerLink="pictures/gallery">Upload pictures</a>
             <a class="dropdown-item" routerLink="/admin/instruments-list">Instruments List</a>
             <a class="dropdown-item" routerLink="/admin/uncertainty-page">Uncertainty Page</a>
             <a class="dropdown-item" (click)="logout()">Logout</a>

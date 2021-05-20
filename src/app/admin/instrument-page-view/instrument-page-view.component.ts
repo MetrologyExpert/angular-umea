@@ -16,7 +16,19 @@ export class InstrumentPageViewComponent implements OnInit {
   manufacturer;
   model;
   description;
+  image = [];
+
   uncertaintyTable=[];
+  total = 0;
+  totalStdUnc = [];
+
+  pdfText:{[key:number]:string}={
+    1 : 'Normal - Std.Dev.',
+    2 : 'Normal - Expanded',
+    3 : 'Normal - Max.dev.',
+    1.7320508 : 'Rectangular',
+    2.4494 : 'Triangular'    
+  }
   
   subscription$;
 
@@ -37,6 +49,19 @@ export class InstrumentPageViewComponent implements OnInit {
         this.model = instrument['instrument_details'].model;
         this.description = instrument['instrument_details'].description;
         this.uncertaintyTable = instrument['uncertaintyTable'];
+
+        for (let u of this.uncertaintyTable){
+          let i = 0;
+          this.total = 0;
+          for (let c of u.contributions){
+              
+                this.total += (Math.pow(c.sc*(c.estimate/c.pdf),2));
+                console.log(this.total);
+
+          }
+          this.totalStdUnc.push(Math.sqrt(this.total));
+
+        }
       });  
      } 
  

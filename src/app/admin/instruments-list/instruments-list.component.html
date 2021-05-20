@@ -8,25 +8,28 @@
     </li>
   </ul> -->
 
-
 <table class="table">
     <thead>
         <tr>
             <th>Instrument name</th>
             <th>Manufacturer</th>
             <th>Edit</th>
+            <th>View</th>
             <th>Delete</th>
-
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let i of instruments$ | async">
             <td>{{ i.name }}</td>
             <td>{{ i.manufacturer }}</td>
-            <td> <button class="btn btn-primary" [routerLink]="['/admin/instrument-page/', i.key]" >Edit</button></td>
-            <td> <button class="btn btn-secondary" [routerLink]="['/admin/instrument-page-view/', i.key]" >Page View</button></td>
+            <td> <button class="btn btn-primary" [routerLink]="['/admin/instrument-page/', i.key]" >Edit
 
-            <td> <button class="btn btn-danger " type="button" (click)="delete(i.key)"> Delete</button></td>
+            </button></td>
+            <td> <button class="btn btn-secondary" [routerLink]="['/admin/instrument-page-view/', i.key]" >View
+            </button></td>
+
+            <td> <button class="btn btn-danger " type="button" (click)="delete(i.key)">Delete
+            </button></td>
         </tr>
     </tbody>
 </table>
