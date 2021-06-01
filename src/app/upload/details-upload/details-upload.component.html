@@ -1,0 +1,13 @@
+<div class="card-group">
+    <div class="card">
+      <div class="card-body">
+        <img src="{{fileUpload.url}}" class="img-thumbnail" alt="{{fileUpload.name}}" width="200px" height="200px">
+
+        <!-- <h5 class="card-title">Card title</h5> -->
+        <p class="card-text"><a href="{{fileUpload.url}}">{{fileUpload.name}}</a></p>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted"><button (click)='deleteFileUpload(fileUpload)' class="btn btn-danger btn-xs" style="float: right">Delete</button></small>
+      </div>
+    </div>
+</div>

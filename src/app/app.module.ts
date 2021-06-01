@@ -1,3 +1,4 @@
+import { UploadImageComponent } from './medialibrary/upload-image/upload-image.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
@@ -35,7 +36,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 //Bootstrap Ng module
-import { NgbModule, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 //Summernote
 //Components
 import { HomeComponent } from './home/home.component';
@@ -53,7 +54,10 @@ import { InstrumentService } from './instrument.service';
 import { AuthService } from './auth.service';
 import { UncertaintyService } from './uncertainty.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GalleryComponent } from './pictures/gallery/gallery.component';
+import { FormUploadComponent } from './upload/form-upload/form-upload.component';
+import { ListUploadComponent } from './upload/list-upload/list-upload.component';
+import { DetailsUploadComponent } from './upload/details-upload/details-upload.component';
+
 
 @NgModule({
   exports: [
@@ -76,8 +80,8 @@ import { GalleryComponent } from './pictures/gallery/gallery.component';
    MatSortModule,
    MatProgressSpinnerModule
 
-],
-  declarations: [GalleryComponent], })
+]
+   })
 
 export class MaterialModule {}
 
@@ -92,8 +96,12 @@ export class MaterialModule {}
     HomeComponent,
     LoginComponent,
     UncertaintyPageComponent,
+
     InstrumentPageViewComponent,
-    InstrumentPageEditComponent
+    InstrumentPageEditComponent,
+
+    UploadImageComponent, 
+    FormUploadComponent, ListUploadComponent, DetailsUploadComponent
   ],
 
 
@@ -102,6 +110,7 @@ export class MaterialModule {}
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
@@ -110,8 +119,6 @@ export class MaterialModule {}
     HttpClientModule, AngularEditorModule,
     RouterModule.forRoot([
       {path:'', component:HomeComponent},
-
-      {path:'pictures/gallery', component:GalleryComponent},
 
       {path:'login', component:LoginComponent},
 
@@ -134,7 +141,11 @@ export class MaterialModule {}
       component:InstrumentsListComponent},
 
       {path:'admin/uncertainty-page',
-      component:UncertaintyPageComponent}
+      component:UncertaintyPageComponent},
+
+      {path:'medialibrary/upload-image',
+      component:UploadImageComponent},
+
 
     ]),
     AngularFireModule.initializeApp(environment.firebase),
@@ -149,7 +160,7 @@ export class MaterialModule {}
     CategoryService,
     AuthService,
     InstrumentService,
-    UncertaintyService
+    UncertaintyService,
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,28 @@
+<!-- <div class="panel panel-primary">
+    <div class="panel-heading">List of Files</div>
+    <div *ngFor="let file of fileUploads">
+      <div class="panel-body">
+        <app-details-upload [fileUpload]='file'></app-details-upload>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <p></p> -->
+
+  <div class="container">
+
+  <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">Media Library</h1>
+
+  <hr class="mt-2 mb-5">
+
+  <div class="row text-center text-lg-left">
+
+    <div class="col-lg-3 col-md-4 col-6" *ngFor="let file of fileUploads">
+      <a href="{{file}}" class="d-block mb-4 h-100">
+          <app-details-upload [fileUpload]='file'></app-details-upload>
+      </a>
+    </div>
+
+  </div>
+
+</div>
