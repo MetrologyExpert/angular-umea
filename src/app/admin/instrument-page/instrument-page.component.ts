@@ -10,7 +10,7 @@ import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@ang
 
 import * as firebase from 'firebase/app';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { max } from 'rxjs/operators';
 
 @Component({
@@ -80,6 +80,7 @@ export class InstrumentPageComponent  {
   // contributionsValueChanges$;
   contributionsArray = [];
   imagePathsArray = [];
+  @Output() tagArray = [];
   image;
   imageName=[];
  
@@ -110,6 +111,15 @@ export class InstrumentPageComponent  {
      
      this.instrumentSubscribe$ = this.instrumentService.getInstrument(this.instrumentId).valueChanges().subscribe( instrument => {
        this.instrument = instrument;
+
+       for (let t of instrument['tags'])
+       {
+         this.tagArray.push(t);
+        (this.instrumentProfile.get('tags')as FormArray).push(this.fb.control(t));
+       }
+        
+       console.log(this.tagArray)
+
 
         for (let u of instrument['uncertaintyTable'])
         {        
@@ -154,10 +164,10 @@ ngOnInit(){
   this.instrumentProfile = this.fb.group({
   instrument_details: this.fb.group({
     name: ['', [Validators.required, Validators.minLength(6)]],
-    manufacturer:["",[Validators.required]],
-    model:["", [Validators.required]],
+    docNumber:["",[Validators.required]],
     description: ["",[Validators.required]]
      }),
+  tags:this.fb.array([]),
   uncertaintyTable: this.fb.array([])
     });
 
@@ -170,6 +180,7 @@ ngOnInit(){
 
   }
 
+  
       get uncertaintyTable(): FormGroup {
         return this.fb.group({
           case: ["",[Validators.required]],
@@ -203,6 +214,18 @@ ngOnInit(){
       // Getter for controls
       get name(){
         return this.instrumentProfile.controls.instrument_details.get('name');
+      }
+
+      
+
+      addTag(){
+        (this.instrumentProfile.get("tags") as FormArray).push(this.fb.control(''));
+
+      }
+
+      removeTag(index){
+        this.instrumentProfile['tags'].removeAt(index);
+
       }
 
       addUncertainty() {
@@ -313,9 +336,13 @@ ngOnInit(){
 
       }
 
-
+   
       getPathUncertainty(){
         return (<FormArray>this.instrumentProfile.get('uncertaintyTable')).controls;
+      }
+
+      getPathTags(){
+        return (<FormArray>this.instrumentProfile.get('tags')).controls;
       }
  
       loadCase(patchVal:number) {

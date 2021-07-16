@@ -15,13 +15,13 @@
       </div>
     <p></p>
 
-    <label><b>Manufacturer</b> <input class="form-control" formControlName="manufacturer"/></label>
+    <label><b>Document number</b> <input class="form-control" formControlName="docNumber"/></label>
     <!-- Validation ***manufacturer*** -->
-  
+<!--   
     <p></p>
-    <label><b>Model</b><input class="form-control" formControlName="model"/></label>
-    <!-- Validation ***model*** -->
-   
+    <label><b>Tags</b><input class="form-control" formControlName="tags"/></label>
+    Validation ***model*** -->
+    
     <p></p>
     <label><b>Description</b> 
       <!-- <textarea class="form-control" formControlName="description" cols="160"></textarea> -->
@@ -30,17 +30,21 @@
   
     <angular-editor formControlName="htmlContent" formControlName="description" [config]="editorConfig"></angular-editor>
 
-
-    <p></p>
-    <button class="btn btn-primary"  type="button" (click)="addUncertainty()">Add Uncertainty Budget Table</button>
-    <p></p>
-
   </div>
+  <button class="btn btn-primary"  type="button" (click)="addTag()">Add Tag</button>
 
-    
+  <label><b>Tags</b></label> 
+  <div class="form-group" formArrayName="tags">
+    <div *ngFor="let tg of getPathTags(); let i = index">
+      <input class="form-control" type="text" [formControlName]="i">
+    </div>
+  </div> 
   <p></p>
-  <hr />
 
+  <hr />
+  <p></p>
+  <button class="btn btn-primary"  type="button" (click)="addUncertainty()">Add Uncertainty Budget Table</button>
+  <p></p>
   <!-- Uncertainty Table Array -->
   <div class="form-group" formArrayName="uncertaintyTable">
     <div
@@ -54,7 +58,9 @@
    
       <!-- Case control -->
       <label > <h2>Case {{uncertaintyIndex + 1}}</h2>
-        <input class="form-control" formControlName="case" /> </label>
+        <angular-editor formControlName="htmlContent" formControlName="case" [config]="editorConfig"></angular-editor>
+
+     </label>
         
         <!-- Validation ***case*** -->       
         <div  class="alert alert-danger" *ngIf="unc.get('case').touched">Please describe your measurement case</div>
@@ -234,5 +240,3 @@
 
 
 {{ this.instrumentProfile.value | json }}
-
-

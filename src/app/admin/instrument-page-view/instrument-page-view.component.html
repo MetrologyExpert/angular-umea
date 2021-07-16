@@ -1,35 +1,41 @@
+{{key}}
 <table class="table table-striped">
     <thead>
       <tr>
         <th scope="col">#</th>
         <th scope="col">Instrument</th>
-        <th scope="col">Manucturer</th>
-        <th scope="col">Model</th>
+        <th scope="col">Document number</th>
+        <th scope="col">Tag</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <th scope="row">1</th>
         <td>{{name}}</td>
-        <td>{{manufacturer}}</td>
-        <td>{{model}}</td>
+        <td>{{docNumber}}</td>
+        <td><div style="display:inline-block; padding: 2px;" *ngFor="let t of tagArray"><h2><span class="badge badge-secondary">{{t}}</span></h2></div></td>
 </table>
+
 <p></p>
-<div>
+
+  <div>
   <h3><b>Description</b></h3>
   <div [innerHTML]="description"></div>
   <!-- <div><p>{{description}}"></p></div> -->
   <p></p>
-</div>
+  </div>
 
-<div *ngFor=" let u of uncertaintyTable; let y = index;">
-  <h3><b>Case:</b> {{u.case}}</h3>
+  <div *ngFor=" let u of uncertaintyTable; let y = index;">
+      <h3><b>Case:</b> </h3>
+    <div [innerHTML]="u.case">
+  </div>
 
-  <div *ngFor="let ix of u.imagePaths let x=index">
+
+  <div *ngFor="let ix of u.imagePaths; let x=index">
     <img src="{{ix.imagePath}}" class="img-fluid rounded mx-auto d-block" alt="{{x}}">
     <p></p>
     {{ix.imageName}}
-</div>
+  </div>
 
 <table class="table table-striped">
   <thead>

@@ -12,9 +12,10 @@ export class InstrumentPageViewComponent implements OnInit {
 
   instrumentId;
 
+  key;
   name;
-  manufacturer;
-  model;
+  docNumber;
+  tagArray = [];
   description;
   image = [];
 
@@ -44,28 +45,30 @@ export class InstrumentPageViewComponent implements OnInit {
 
       this.subscription$ = this.instrumentService.getInstrument(this.instrumentId).valueChanges().subscribe( instrument => 
       {
+        this.key = this.instrumentId;
         this.name = instrument['instrument_details'].name;
-        this.manufacturer = instrument['instrument_details'].manufacturer;
-        this.model = instrument['instrument_details'].model;
+        this.docNumber = instrument['instrument_details'].docNumber;
         this.description = instrument['instrument_details'].description;
+        this.tagArray = instrument['tags'];
         this.uncertaintyTable = instrument['uncertaintyTable'];
 
         for (let u of this.uncertaintyTable){
           let i = 0;
           this.total = 0;
           for (let c of u.contributions){
-              
                 this.total += (Math.pow(c.sc*(c.estimate/c.pdf),2));
                 console.log(this.total);
-
           }
           this.totalStdUnc.push(Math.sqrt(this.total));
-
         }
-      });  
-     } 
- 
 
+        console.log(this.tagArray);
+      });  
+
+
+
+
+     } 
 
   ngOnInit(): void {
   }
